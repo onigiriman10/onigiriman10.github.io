@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>点P</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <canvas id="graph_canvas" width="500" height="500"></canvas>
+
+    <label id="yoko">横の長さ<input type="text" name="yoko" value=5>cm</label>
+    <label id="tate">縦の長さ<input type="text" name="tate" value="4">cm</label>
+
+    <label id="siten">始点<select id="start_point" name="start_point">
+            <option value="A">A</option>
+            <option value="B" selected>B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+        </select></label>
+
+    <p><input id="show" type="button" value="表示する"></p>
+    <p><input id="submit" type="button" value="スタート"></p>
+    <p><input id="stop" type="button" value="ストップ"></p>
+    <p><input id="reset" type="button" value="はじめから"></p>
+    <p><input id="clear" type="button" value="数字を消す"></p>
+    <p><input id="gragh" type="button" value="グラフを描画"></p>
+
+    <label id="sokudo">速度<select id="speed">
+            <option value="1">1㎝/秒</option>
+            <option value="2">2cm/秒</option>
+            <option value="0.5">1㎝/2秒</option>
+        </select></label>
+
+    <label name="form1">
+        <input type="checkbox" name="mawaru" value="right" checked> 時計回り
+        <input type="checkbox" name="mawaru" value="left"> 反時計回り
+    </label>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js" type="text/javascript"></script>
+
+    <script>
+        let sh = document.getElementById('show');
+        let sub = document.getElementById('submit');
+        let sto = document.getElementById('stop');
+        let re = document.getElementById('reset');
+        let cl = document.getElementById('clear');
+        let gra = document.getElementById('gragh');
+        let animid;
+
+        let sp = document.getElementById('start_point');
+
+        //点P
+        let P = canvas.getContext('2d');
+        let x = 0;
+        let y = 0;
+        let tate = 0;
+        let yoko = 0;
+        let dist = 0;
+        let r = 1;
+
+        let size = document.getElementsByName('size')[0];
+
+
+
+
+        //点P
+        let draw = function() {
+            P.clearRect(0, 0, 500, 500);
+            P.strokeRect(50, 50, yoko, tate); //点Pが通るところ
+            P.beginPath();
+
+            if (sp.value == 'A') {
+                P.arc(x + 50, y + 50, 8, 0, 2 * Math.PI, false);
+
+            } else if (sp.value == 'B') {
+                P.arc(x + yoko + 50, y + 50, 8, 0, 2 * Math.PI, false);
+
+            } else if (sp.value == 'C') {
+                P.arc(x + yoko + 50, y + tate + 50, 8, 0, 2 * Math.PI, false);
+
+            } else if (sp.value == 'D') {
+                P.arc(x + 50, y + tate + 50, 8, 0, 2 * Math.PI, false);
+            }
+
+            P.fillStyle = 'green';
+            P.fill();
+
+            //            //点Pからのびる線
+            //            P.moveTo(50, 50);
+            //            P.lineTo(x + 50, y + 50);
+            //            P.moveTo(yoko + 50, 50);
+            //            P.lineTo(x + 50, y + 50);
+            //            P.stroke();
+
+            //頂点のテキスト
+            P.fillStyle = "#000";
+            P.font = "20px cursive";
+            P.fillText("A", 30, 50);
+            P.fillText("B", yoko + 60, 50);
+            P.fillText("C", yoko + 60, tate + 60);
+            P.fillText("D", 30, tate + 60);
+            P.fillText(yoko / r + "cm", yoko / 2 + 30, 40);
+            P.fillText(tate / r + "cm", 5, tate / 2 + 30);
+        }
+
+        //表示する
+        sh.onclick = function() {
+            tate = document.getElementsByName('tate')[0].value;
+            yoko = document.getElementsByName('yoko')[0].value;
+
+            if (yoko > 400 || tate > 400) {
+                window.alert('横もしくは縦の長さが大きすぎます（400以内で入力してください）');
+                document.getElementsByName('tate')[0].value = '';
+                document.getElementsByName('yoko')[0].value = '';
+                return;
+            }
+            if (yoko < 1.0 || tate < 1.0) {
+                window.alert('横もしくは縦の長さが短すぎます（1.0以上で入力してください）');
+                document.getElementsByName('tate')[0].value = '';
+                document.getElementsByName('yoko')[0].value = '';
+                return;
+            }
+
+            tate = parseInt(tate, 10);
+            yoko = parseInt(yoko, 10);
+
+            // 比率を求める
+            if (yoko > tate) {
+                r = Math.floor(400 / yoko);
+            } else {
+                r = Math.floor(400 / tate);
+            }
+            tate *= r;
+            yoko *= r;
+
+            draw(yoko, tate);
+
+            if (sp.value == 'B') {
+                dist += yoko;
+            } else if (sp.value == 'C') {
+                dist += (yoko + tate);
+            } else if (sp.value == 'D') {
+                dist += (yoko + tate);
+            }
+        }
+        
+
+
+        //スタート
+        sub.onclick = function() {
+            if (yoko === 0) {
+                return;
+            }
+            let extracted1 = function() {
+                P.clearRect(0, 0, 500, 500);
+                P.strokeRect(50, 50, yoko + 50, tate + 50); //点Pが通るところ
+                draw();
+
+                if (dist % r == 0) {
+                    lineChartData.labels.push(Math.floor(dist / r));
+                    lineChartData.datasets[0].data.push(yoko * y / 2 / r / r);
+                }
+
+
+
+                console.log(dist);
+
+                if (dist < yoko) {
+                    x += 1;
+                } else if (dist < yoko + tate) {
+                    y += 1;
+                } else if (dist < yoko * 2 + tate) {
+                    x -= 1;
+                } else if (dist < yoko * 2 + tate * 2) {
+                    y -= 1;
+                } else {
+                    clearInterval(animid);
+                }
+
+                console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate);
+
+                dist += 1;
+
+            }
+            let anim = extracted1
+            animid = setInterval(anim, 10);
+        }
+
+        //ストップ
+        sto.onclick = function() {
+            clearInterval(animid);
+        }
+
+        //はじめから
+        re.onclick = function() {
+            if (yoko === 0) {
+                return;
+            }
+            x = 0;
+            y = 0;
+            dist = 0;
+            P.clearRect(0, 0, 800, 400);
+            P.strokeRect(50, 50, yoko, tate); //点Pが通るところ
+            lineChartData.datasets[0].data = [];
+            lineChartData.labels = [];
+            draw();
+        }
+
+        //数字を消す
+        cl.onclick = function() {
+            document.size.reset();
+        }
+
+        //グラフの内容
+        var lineChartData = {
+            labels: [],
+            datasets: [{
+                label: "緑データ",
+                fillColor: "rgba(92,220,92,0.2)", // 線から下端までを塗りつぶす色
+                strokeColor: "rgba(92,220,92,1)", // 折れ線の色
+                pointColor: "rgba(92,220,92,1)", // ドットの塗りつぶし色
+                pointStrokeColor: "white", // ドットの枠線色
+                pointHighlightFill: "red", // マウスが載った際のドットの塗りつぶし色
+                pointHighlightStroke: "green", // マウスが載った際のドットの枠線色
+                lineTension: 0,
+                data: [] // 各点の値
+            }]
+        }
+
+        //グラフを描画
+        gra.onclick = function() {
+            var ctx = document.getElementById('graph_canvas').getContext('2d');
+            window.myLine = new Chart(ctx).Line(lineChartData);
+        }
+
+    </script>
+</body>
+
+</html>
