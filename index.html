@@ -47,6 +47,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js" type="text/javascript"></script>
 
   <script>
+    
+    let canvas = document.getElementById('canvas');
+    let g_canvas = document.getElementById('graph_canvas');
+    let canvasWidth = 300;
+    let canvasHeight = 300;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    g_canvas.width = canvasWidth;
+    g_canvas.height = canvasHeight;
+    
     let sh = document.getElementById('show');
     let sub = document.getElementById('submit');
     let sto = document.getElementById('stop');
@@ -65,7 +75,7 @@
     let yoko = 0;
     let dist = 0;
     let r = 1;
-    let s = 10;
+    let padding = 10;
 
     let size = document.getElementsByName('size')[0];
 
@@ -75,20 +85,20 @@
     //点P
     let draw = function() {
       P.clearRect(0, 0, 500, 500);
-      P.strokeRect(s, s, yoko, tate); //点Pが通るところ
+      P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
       P.beginPath();
 
       if (sp.value == 'A') {
-        P.arc(x + s, y + s, 5, 0, 2 * Math.PI, false);
+        P.arc(x + padding, y + padding, 5, 0, 2 * Math.PI, false);
 
       } else if (sp.value == 'B') {
-        P.arc(x + yoko + s, y + s, 5, 0, 2 * Math.PI, false);
+        P.arc(x + yoko + padding, y + padding, 5, 0, 2 * Math.PI, false);
 
       } else if (sp.value == 'C') {
-        P.arc(x + yoko + s, y + tate + s, 5, 0, 2 * Math.PI, false);
+        P.arc(x + yoko + padding, y + tate + padding, 5, 0, 2 * Math.PI, false);
 
       } else if (sp.value == 'D') {
-        P.arc(x + s, y + tate + s, 5, 0, 2 * Math.PI, false);
+        P.arc(x + padding, y + tate + padding, 5, 0, 2 * Math.PI, false);
       }
 
       P.fillStyle = 'green';
@@ -117,8 +127,8 @@
       tate = document.getElementsByName('tate')[0].value;
       yoko = document.getElementsByName('yoko')[0].value;
 
-      if (yoko > 400 || tate > 400) {
-        window.alert('横もしくは縦の長さが大きすぎます（400以内で入力してください）');
+      if (yoko > canvasWidth || tate > canvasHeight) {
+        window.alert('横もしくは縦の長さが大きすぎます（'+canvasWidth+'未満で入力してください）');
         document.getElementsByName('tate')[0].value = '';
         document.getElementsByName('yoko')[0].value = '';
         return;
@@ -130,18 +140,23 @@
         return;
       }
 
+      // 文字列を数値に変換（10進数）
       tate = parseInt(tate, 10);
       yoko = parseInt(yoko, 10);
 
       // 比率を求める
+      // 大きい方の辺の1cmが何pxに当たるかを計算
       if (yoko > tate) {
-        r = Math.floor(200 / yoko);
+        r = Math.floor((canvasWidth - padding * 2) / yoko);
       } else {
-        r = Math.floor(200 / tate);
+        r = Math.floor((canvasWidth - padding * 2) / tate);
       }
-      tate *= r;
+      
+      // cmをpxに変換
       yoko *= r;
+      tate *= r;
 
+      // 点Pが動く四角を描画
       draw(yoko, tate);
 
       if (sp.value == 'B') {
