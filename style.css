@@ -11,6 +11,7 @@
   margin: 0 auto;
   text-align: center;
   background-color: beige;
+  padding: 4%;
 }
 
 canvas {
@@ -20,6 +21,11 @@ canvas {
 
 input[type="text"] {
   width: 30px;
+}
+
+.set {
+  width: 30%;
+  text-align: left;
 }
 
 .length {
