@@ -7,45 +7,30 @@
 }
 
 .container {
-  max-width: 400px;
+  max-width: 980px;
   margin: 0 auto;
+  text-align: center;
+  background-color: beige;
 }
 
 canvas {
-  margin-top: 50px;
-  margin-left: 50px;
   border: solid 3px gray;
 }
 
-#yoko,
-#tate {
-  margin-left: 50px;
-  margin-top: 20px;
-  font-size: 15px;
-}
-
-
 input[type="text"] {
-  margin-left: 10px;
-  margin-right: 5px;
-  font-size: 20px;
-  width: 25px;
-  height: 25px;
+  width: 30px;
 }
 
-.start_point {
-  text-align: center;
+.length {
+  display: flex;
+  justify-content: space-around;
   margin: 1em 0;
 }
 
-#siten {
-  margin-left: 180px;
-  font-size: 15px;
-}
-
-#start_point {
-  margin-left: 10px;
-  font-size: 21px;
+.setting {
+  display: flex;
+  justify-content: space-around;  
+  margin: 1em 0;
 }
 
 .control {
@@ -57,9 +42,5 @@ input[type="text"] {
 
 .control button {
   color: steelblue;
-  width: 8em;
-}
-
-#sokudo {
-  margin-left: 180px;
+  width: 25%;
 }
