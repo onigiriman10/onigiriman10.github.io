@@ -69,10 +69,14 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js" type="text/javascript"></script>
 
   <script>
+    // ウィンドウの幅
+    let windowWidth = window.innerWidth;
+
+    // キャンバスサイズをウィンドウの幅の8割に設定
     let canvas = document.getElementById('canvas');
     let g_canvas = document.getElementById('graph_canvas');
-    let canvasWidth = 300;
-    let canvasHeight = 300;
+    let canvasWidth = windowWidth * 0.8;
+    let canvasHeight = windowWidth * 0.8;
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
     g_canvas.width = canvasWidth;
@@ -96,7 +100,7 @@
     let yoko = 0;
     let dist = 0;
     let r = 1;
-    let padding = 10;
+    let padding = 50;
 
     let size = document.getElementsByName('size')[0];
 
