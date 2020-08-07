@@ -7,7 +7,7 @@
 }
 
 .container {
-  max-width: 980px;
+  max-width: 480px;
   margin: 0 auto;
   text-align: center;
   background-color: beige;
@@ -15,6 +15,7 @@
 
 canvas {
   border: solid 3px gray;
+  background-color: white;
 }
 
 input[type="text"] {
