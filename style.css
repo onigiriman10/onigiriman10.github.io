@@ -6,10 +6,6 @@
   box-sizing: border-box;
 }
 
-html {
-  font-size: 3vw;
-}
-
 .container {
   margin: 0 auto;
   text-align: center;
@@ -20,16 +16,10 @@ html {
 canvas {
   border: solid 3px gray;
   background-color: white;
-  margin-top: 1rem
 }
 
 input[type="text"] {
-  width: 2rem;
-  height: 1.5rem;
-}
-
-select {
-  height: 1.5rem;  
+  width: 30px;
 }
 
 .set {
@@ -40,13 +30,13 @@ select {
 .length {
   display: flex;
   justify-content: space-around;
-  margin: 2rem 0;
+  margin: 1em 0;
 }
 
 .setting {
   display: flex;
   justify-content: space-around;  
-  margin: 2rem 0;
+  margin: 1em 0;
 }
 
 .control {
@@ -57,7 +47,6 @@ select {
 }
 
 .control button {
-  font-size: 1rem;
   color: steelblue;
   width: 25%;
 }
