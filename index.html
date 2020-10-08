@@ -202,7 +202,7 @@
                 dist += (yoko + tate);
             }
 
-            vel = document.getElementById('spped').value;
+            vel = document.getElementById('speed').value;
             vel = parseFloat(vel, 10);
             
         }
@@ -265,6 +265,9 @@
             if (yoko === 0) {
                 return;
             }
+            
+            started = false;
+            
             x = 0;
             y = 0;
             dist = 0;
