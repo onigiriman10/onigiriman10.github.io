@@ -50,7 +50,7 @@
         </div>
         <div class="control">
             <button id="reset">はじめから</button>
-            <button id="clear">数字を消す</button>
+            <button id="clear">リセット</button>
             <button id="gragh">グラフを描画</button>
         </div>
 
@@ -111,7 +111,6 @@
 
 
         //点P
-
         let draw = function() {
             P.clearRect(0, 0, canvasWidth, canvasHeight);
             P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
@@ -120,25 +119,44 @@
             if (sp.value == 'A') {
                 P.arc(x + padding, y + padding, p_size, 0, 2 * Math.PI, false);
 
+                P.moveTo(padding, padding);
+                P.lineTo(x + padding, y + padding);
+                P.moveTo(yoko + padding, padding);
+                P.lineTo(x + padding, y + padding);
+                P.stroke();
+
             } else if (sp.value == 'B') {
                 P.arc(x + yoko + padding, y + padding, p_size, 0, 2 * Math.PI, false);
+
+                P.moveTo(padding, padding);
+                P.lineTo(x + yoko + padding, y + padding);
+                P.moveTo(yoko + padding, padding);
+                P.lineTo(x + yoko + padding, y + padding);
+                P.stroke();
 
             } else if (sp.value == 'C') {
                 P.arc(x + yoko + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
 
+                P.moveTo(padding, padding);
+                P.lineTo(x + yoko + padding, y + tate + padding);
+                P.moveTo(yoko + padding, padding);
+                P.lineTo(x + yoko + padding, y + tate + padding);
+                P.stroke();
+
             } else if (sp.value == 'D') {
                 P.arc(x + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
+
+                P.moveTo(padding, padding);
+                P.lineTo(x + padding, y + tate + padding);
+                P.moveTo(yoko + padding, padding);
+                P.lineTo(x + padding, y + tate + padding);
+                P.stroke();
             }
+
+
 
             P.fillStyle = 'green';
             P.fill();
-
-            //点Pからのびる線
-            P.moveTo(padding, padding);
-            P.lineTo(x + padding, y + padding);
-            P.moveTo(yoko + padding, padding);
-            P.lineTo(x + padding, y + padding);
-            P.stroke();
 
 
             //頂点・辺の長さのテキスト
@@ -204,7 +222,7 @@
 
             vel = document.getElementById('speed').value;
             vel = parseFloat(vel, 10);
-            
+
         }
 
 
@@ -214,10 +232,11 @@
             if (yoko === 0) {
                 return;
             }
+
             if (yoko === 0 || started) {
                 return;
             }
-
+            
             started = true;
 
             let extracted1 = function() {
@@ -229,8 +248,6 @@
                     lineChartData.labels.push(Math.floor(dist / r));
                     lineChartData.datasets[0].data.push(yoko * y / 2 / r / r);
                 }
-
-                console.log(dist);
 
                 if (dist < yoko) {
                     x += vel;
@@ -244,20 +261,23 @@
                     clearInterval(animid);
                 }
 
-                 console.log("vel: " + vel);
+                console.log("vel: " + vel);
                 console.log("distance: " + dist);
                 console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate);
 
                 dist += 1;
 
             }
+            
             let anim = extracted1
             animid = setInterval(anim, 10);
+            
         }
 
         //ストップ
         sto.onclick = function() {
             clearInterval(animid);
+            started = false;
         }
 
         //はじめから
@@ -265,9 +285,9 @@
             if (yoko === 0) {
                 return;
             }
-            
+
             started = false;
-            
+
             x = 0;
             y = 0;
             dist = 0;
@@ -276,11 +296,13 @@
             lineChartData.datasets[0].data = [];
             lineChartData.labels = [];
             draw();
+            
         }
 
-        //数字を消す
+        //リセット
         cl.onclick = function() {
-            document.size.reset();
+            //document.size.reset();
+            P.clearRect(0, 0, canvasWidth, canvasHeight);
         }
 
         //グラフの内容
