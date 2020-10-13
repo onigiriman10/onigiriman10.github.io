@@ -3,50 +3,86 @@
 /* Canvas用CSS*/
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html {
+  font-size: 3vw;
+}
+
+html {
+  font-size: 3vw;
 }
 
 .container {
-  margin: 0 auto;
-  text-align: center;
-  background-color: beige;
-  padding: 4%;
+    margin: 0 auto;
+    text-align: center;
+    background-color: beige;
+    padding: 4%;
 }
 
 canvas {
-  border: solid 3px gray;
-  background-color: white;
+    border: solid 3px gray;
+    background-color: white;
 }
 
 input[type="text"] {
-  width: 30px;
+    width: 30px;
+  border: solid 3px gray;
+  background-color: white;
+  margin-top: 1rem
+}
+
+input[type="text"] {
+  width: 2rem;
+  height: 1.5rem;
+}
+
+select {
+  height: 1.5rem;  
 }
 
 .set {
-  width: 30%;
-  text-align: left;
+    font-size: 3vw;
+    width: 30%;
+    text-align: left;
 }
 
 .length {
+    display: flex;
+    justify-content: space-around;
+    margin: 1em 0;
+}
+
+.setting {
+    display: flex;
+    justify-content: space-around;
+    margin: 1em 0;
   display: flex;
   justify-content: space-around;
-  margin: 1em 0;
+  margin: 2rem 0;
 }
 
 .setting {
   display: flex;
   justify-content: space-around;  
-  margin: 1em 0;
+  margin: 2rem 0;
 }
 
 .control {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  margin: 1em 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 1em 0;
 }
 
 .control button {
+
+    color: steelblue;
+    width: 25%;
+}
+
+  font-size: 1rem;
   color: steelblue;
   width: 25%;
 }
