@@ -20,6 +20,13 @@
             <div class="set">
                 <label id="tate">縦の長さ<input type="text" name="tate" value="4">cm</label>
             </div>
+            <!--
+            <div class="set">
+                <label id="seconds">
+                    秒数
+                </label>
+            </div>
+-->
         </div>
 
         <div class="setting">
@@ -154,7 +161,6 @@
             }
 
 
-
             P.fillStyle = 'green';
             P.fill();
 
@@ -226,7 +232,6 @@
         }
 
 
-
         //スタート
         sub.onclick = function() {
             if (yoko === 0) {
@@ -236,7 +241,7 @@
             if (yoko === 0 || started) {
                 return;
             }
-            
+
             started = true;
 
             let extracted1 = function() {
@@ -262,16 +267,15 @@
                 }
 
                 console.log("vel: " + vel);
-                console.log("distance: " + dist);
-                console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate);
+                console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate)
 
-                dist += 1;
+                dist += vel;
 
             }
-            
+
             let anim = extracted1
             animid = setInterval(anim, 10);
-            
+
         }
 
         //ストップ
@@ -296,7 +300,7 @@
             lineChartData.datasets[0].data = [];
             lineChartData.labels = [];
             draw();
-            
+
         }
 
         //リセット
