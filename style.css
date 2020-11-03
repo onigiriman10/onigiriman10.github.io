@@ -7,11 +7,11 @@
 }
 
 html {
-  font-size: 3vw;
+    font-size: 3vw;
 }
 
 html {
-  font-size: 3vw;
+    font-size: 3vw;
 }
 
 .container {
@@ -28,18 +28,19 @@ canvas {
 
 input[type="text"] {
     width: 30px;
-  border: solid 3px gray;
-  background-color: white;
-  margin-top: 1rem
+    border: solid 3px gray;
+    background-color: white;
+    margin-top: 1rem;
+    font-size: 4vw;
 }
 
 input[type="text"] {
-  width: 2rem;
-  height: 1.5rem;
+    width: 2rem;
+    height: 1.5rem;
 }
 
 select {
-  height: 1.5rem;  
+    height: 1.5rem;
 }
 
 .set {
@@ -58,15 +59,15 @@ select {
     display: flex;
     justify-content: space-around;
     margin: 1em 0;
-  display: flex;
-  justify-content: space-around;
-  margin: 2rem 0;
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
 }
 
 .setting {
-  display: flex;
-  justify-content: space-around;  
-  margin: 2rem 0;
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
 }
 
 .control {
@@ -76,13 +77,9 @@ select {
     margin: 1em 0;
 }
 
+
 .control button {
-
     color: steelblue;
-    width: 25%;
-}
-
-  font-size: 1rem;
-  color: steelblue;
-  width: 25%;
+    width: 30%;
+    font-size: 3vw;
 }
