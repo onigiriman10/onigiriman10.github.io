@@ -30,15 +30,15 @@ input[type="text"] {
     border: solid 3px gray;
     background-color: white;
     margin-top: 1rem;
-    font-size: 2.5rem;
+    font-size: 2rem;
     width: 3rem;
     height: 3rem;
 }
 
 
 select {
-    height: 3rem;
-    font-size: 1.5rem;
+    height: 2rem;
+    font-size: 1rem;
 }
 
 .set {

@@ -20,7 +20,7 @@
             <div class="set">
                 <label id="tate">縦の長さ<input type="text" name="tate" value="4">cm</label>
             </div>
-            
+
             <div class="set">
                 <label id="seconds">
                     秒数
@@ -110,6 +110,7 @@
         let r = 1;
         let started = false;
         let vel;
+        let seconds = 0;
         let padding = canvasWidth * 0.08; // Canvasと四角の間の余白（8%）
         let p_size = canvasWidth * 0.02; // 点Pのサイズ（2%）
         let s_padding = canvasWidth * 0.05; // Canvasと頂点の間の余白  
@@ -218,14 +219,6 @@
             // 点Pが動く四角を描画
             draw(yoko, tate);
 
-            if (sp.value == 'B') {
-                dist += yoko;
-            } else if (sp.value == 'C') {
-                dist += (yoko + tate);
-            } else if (sp.value == 'D') {
-                dist += (yoko + tate);
-            }
-
             vel = document.getElementById('speed').value;
             vel = parseFloat(vel, 10);
 
@@ -254,22 +247,41 @@
                     lineChartData.datasets[0].data.push(yoko * y / 2 / r / r);
                 }
 
-                if (dist < yoko) {
-                    x += vel;
-                } else if (dist < yoko + tate) {
-                    y += vel;
-                } else if (dist < yoko * 2 + tate) {
-                    x -= vel;
-                } else if (dist < yoko * 2 + tate * 2) {
-                    y -= vel;
-                } else {
-                    clearInterval(animid);
+                if (sp.value == 'A') {
+                    if (dist < yoko) x += vel;
+                    else if (dist < yoko + tate) y += vel;
+                    else if (dist < yoko * 2 + tate) x -= vel;
+                    else if (dist < yoko * 2 + tate * 2) y -= vel;
+                    else clearInterval(animid);
+                } else if (sp.value == 'B') {
+                    if (dist < tate) y += vel;
+                    else if (dist < yoko + tate) x -= vel;
+                    else if (dist < yoko + tate * 2) y -= vel;
+                    else if (dist < yoko * 2 + tate * 2) x += vel;
+                    else clearInterval(animid);
+
+                } else if (sp.value == 'C') {
+                    if (dist < yoko) x -= vel;
+                    else if (dist < yoko + tate) y -= vel;
+                    else if (dist < yoko * 2 + tate) x += vel;
+                    else if (dist < yoko * 2 + tate * 2) y += vel;
+                    else clearInterval(animid);
+
+                } else if (sp.value == 'D') {
+                    if (dist < tate) y -= vel;
+                    else if (dist < yoko + tate) x += vel;
+                    else if (dist < yoko + tate * 2) y += vel;
+                    else if (dist < yoko * 2 + tate * 2) x -= vel;
+                    else clearInterval(animid);
                 }
 
-//                console.log("vel: " + vel);
+                console.log("vel: " + vel);
                 console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate)
 
                 dist += vel;
+
+                seconds = parseInt(dist / r / vel);
+                document.getElementById('seconds').textContent = seconds;
 
             }
 
@@ -330,8 +342,5 @@
             var ctx = document.getElementById('graph_canvas').getContext('2d');
             window.myLine = new Chart(ctx).Line(lineChartData);
         }
-
     </script>
-</body>
-
-</html>
+</body></html>
