@@ -307,6 +307,8 @@
       x = 0;
       y = 0;
       dist = 0;
+      seconds = 0;
+      document.getElementById('seconds').textContent = seconds;
       P.clearRect(0, 0, canvasWidth, canvasHeight);
       P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
       lineChartData.datasets[0].data = [];
