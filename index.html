@@ -2,345 +2,344 @@
 <html lang="ja">
 
 <head>
-    <meta charset="UTF-8">
-    <title>点P</title>
-    <link href="style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>点P</title>
+  <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
-        <div class="canvas">
-            <canvas id="canvas"></canvas>
-        </div>
+  <div class="container">
+    <div class="canvas">
+      <canvas id="canvas"></canvas>
+    </div>
 
-        <div class="length">
-            <div class="set">
-                <label id="yoko">横の長さ<input type="text" name="yoko" value=5>cm</label>
-            </div>
-            <div class="set">
-                <label id="tate">縦の長さ<input type="text" name="tate" value="4">cm</label>
-            </div>
+    <div class="length">
+      <div class="set">
+        <label id="yoko">横の長さ<input type="text" name="yoko" value=5>cm</label>
+      </div>
 
-            <div class="set">
-                <label id="seconds">
-                    秒数
-                </label>
-            </div>
+      <div class="set">
+        <label id="tate">縦の長さ<input type="text" name="tate" value="4">cm</label>
+      </div>
 
-        </div>
+      <div class="set">
+        秒数　<label id="seconds"></label>秒
+      </div>
 
-        <div class="setting">
-            <div class="set">
-                <label for="start_point">始点</label>
-                <select id="start_point" name="start_point">
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                </select>
-            </div>
+    </div>
 
-            <div class="set">
-                <label for="speed">速度</label>
-                <select id="speed">
-                    <option value="1">1㎝/秒</option>
-                    <option value="2">2cm/秒</option>
-                    <option value="0.5">1㎝/2秒</option>
-                </select>
-            </div>
-        </div>
+    <div class="setting">
+      <div class="set">
+        <label for="start_point">始点</label>
+        <select id="start_point" name="start_point">
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
 
-        <div class="control">
-            <button id="show">表示する</button>
-            <button id="submit">スタート</button>
-            <button id="stop">ストップ</button>
-        </div>
-        <div class="control">
-            <button id="reset">はじめから</button>
-            <button id="clear">リセット</button>
-            <button id="gragh">グラフを描画</button>
-        </div>
+      <div class="set">
+        <label for="speed">速度</label>
+        <select id="speed">
+          <option value="1">1㎝/秒</option>
+          <option value="2">2cm/秒</option>
+          <option value="0.5">1㎝/2秒</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control">
+      <button id="show">表示する</button>
+      <button id="submit">スタート</button>
+      <button id="stop">ストップ</button>
+    </div>
+    <div class="control">
+      <button id="reset">はじめから</button>
+      <button id="clear">リセット</button>
+      <button id="gragh">グラフを描画</button>
+    </div>
 
 
-        <!--
+    <!--
     <label name="form1">
         <input type="checkbox" name="mawaru" value="right" checked> 時計回り
         <input type="checkbox" name="mawaru" value="left"> 反時計回り
     </label>
 -->
 
-        <div class="g_canvas">
-            <canvas id="graph_canvas"></canvas>
-        </div>
+    <div class="g_canvas">
+      <canvas id="graph_canvas"></canvas>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js" type="text/javascript"></script>
 
-    <script>
-        // ウィンドウの幅
-        let windowWidth = window.innerWidth;
+  <script>
+    // ウィンドウの幅
+    let windowWidth = window.innerWidth;
 
-        // キャンバスサイズをウィンドウの幅の8割に設定
-        let canvas = document.getElementById('canvas');
-        let g_canvas = document.getElementById('graph_canvas');
-        let canvasWidth = windowWidth * 0.8;
-        let canvasHeight = windowWidth * 0.8;
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        g_canvas.width = canvasWidth;
-        g_canvas.height = canvasHeight;
+    // キャンバスサイズをウィンドウの幅の8割に設定
+    let canvas = document.getElementById('canvas');
+    let g_canvas = document.getElementById('graph_canvas');
+    let canvasWidth = windowWidth * 0.8;
+    let canvasHeight = windowWidth * 0.8;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    g_canvas.width = canvasWidth;
+    g_canvas.height = canvasHeight;
 
-        let sh = document.getElementById('show');
-        let sub = document.getElementById('submit');
-        let sto = document.getElementById('stop');
-        let re = document.getElementById('reset');
-        let cl = document.getElementById('clear');
-        let gra = document.getElementById('gragh');
+    let sh = document.getElementById('show');
+    let sub = document.getElementById('submit');
+    let sto = document.getElementById('stop');
+    let re = document.getElementById('reset');
+    let cl = document.getElementById('clear');
+    let gra = document.getElementById('gragh');
 
-        let animid;
+    let animid;
 
-        let sp = document.getElementById('start_point');
+    let sp = document.getElementById('start_point');
 
-        let P = canvas.getContext('2d');
-        let x = 0;
-        let y = 0;
-        let tate = 0;
-        let yoko = 0;
-        let dist = 0;
-        let r = 1;
-        let started = false;
-        let vel;
-        let seconds = 0;
-        let padding = canvasWidth * 0.08; // Canvasと四角の間の余白（8%）
-        let p_size = canvasWidth * 0.02; // 点Pのサイズ（2%）
-        let s_padding = canvasWidth * 0.05; // Canvasと頂点の間の余白  
+    let P = canvas.getContext('2d');
+    let ctx = g_canvas.getContext('2d');
+    let x = 0;
+    let y = 0;
+    let tate = 0;
+    let yoko = 0;
+    let dist = 0;
+    let r = 1;
+    let started = false;
+    let vel;
+    let seconds = 0;
+    let padding = canvasWidth * 0.08; // Canvasと四角の間の余白（8%）
+    let p_size = canvasWidth * 0.02; // 点Pのサイズ（2%）
+    let s_padding = canvasWidth * 0.05; // Canvasと頂点の間の余白  
 
-        let size = document.getElementsByName('size')[0];
-
-
-        //点P
-        let draw = function() {
-            P.clearRect(0, 0, canvasWidth, canvasHeight);
-            P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
-            P.beginPath();
-
-            if (sp.value == 'A') {
-                P.arc(x + padding, y + padding, p_size, 0, 2 * Math.PI, false);
-
-                P.moveTo(padding, padding);
-                P.lineTo(x + padding, y + padding);
-                P.moveTo(yoko + padding, padding);
-                P.lineTo(x + padding, y + padding);
-                P.stroke();
-
-            } else if (sp.value == 'B') {
-                P.arc(x + yoko + padding, y + padding, p_size, 0, 2 * Math.PI, false);
-
-                P.moveTo(padding, padding);
-                P.lineTo(x + yoko + padding, y + padding);
-                P.moveTo(yoko + padding, padding);
-                P.lineTo(x + yoko + padding, y + padding);
-                P.stroke();
-
-            } else if (sp.value == 'C') {
-                P.arc(x + yoko + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
-
-                P.moveTo(padding, padding);
-                P.lineTo(x + yoko + padding, y + tate + padding);
-                P.moveTo(yoko + padding, padding);
-                P.lineTo(x + yoko + padding, y + tate + padding);
-                P.stroke();
-
-            } else if (sp.value == 'D') {
-                P.arc(x + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
-
-                P.moveTo(padding, padding);
-                P.lineTo(x + padding, y + tate + padding);
-                P.moveTo(yoko + padding, padding);
-                P.lineTo(x + padding, y + tate + padding);
-                P.stroke();
-            }
+    let size = document.getElementsByName('size')[0];
 
 
-            P.fillStyle = 'green';
-            P.fill();
+    //点P
+    let draw = function() {
+      P.clearRect(0, 0, canvasWidth, canvasHeight);
+      P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
+      P.beginPath();
+
+      if (sp.value == 'A') {
+        P.arc(x + padding, y + padding, p_size, 0, 2 * Math.PI, false);
+
+        P.moveTo(padding, padding);
+        P.lineTo(x + padding, y + padding);
+        P.moveTo(yoko + padding, padding);
+        P.lineTo(x + padding, y + padding);
+        P.stroke();
+
+      } else if (sp.value == 'B') {
+        P.arc(x + yoko + padding, y + padding, p_size, 0, 2 * Math.PI, false);
+
+        P.moveTo(padding, padding);
+        P.lineTo(x + yoko + padding, y + padding);
+        P.moveTo(yoko + padding, padding);
+        P.lineTo(x + yoko + padding, y + padding);
+        P.stroke();
+
+      } else if (sp.value == 'C') {
+        P.arc(x + yoko + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
+
+        P.moveTo(padding, padding);
+        P.lineTo(x + yoko + padding, y + tate + padding);
+        P.moveTo(yoko + padding, padding);
+        P.lineTo(x + yoko + padding, y + tate + padding);
+        P.stroke();
+
+      } else if (sp.value == 'D') {
+        P.arc(x + padding, y + tate + padding, p_size, 0, 2 * Math.PI, false);
+
+        P.moveTo(padding, padding);
+        P.lineTo(x + padding, y + tate + padding);
+        P.moveTo(yoko + padding, padding);
+        P.lineTo(x + padding, y + tate + padding);
+        P.stroke();
+      }
 
 
-            //頂点・辺の長さのテキスト
-            P.fillStyle = "#000";
-            P.font = "15px cursive";
-            P.fillText("A", s_padding, s_padding);
-            P.fillText("B", yoko + s_padding * 2, s_padding);
-            P.fillText("C", yoko + s_padding * 2, tate + s_padding * 2);
-            P.fillText("D", s_padding, tate + s_padding * 2);
-
-            P.fillText(yoko / r + "cm", yoko / 2 + s_padding, s_padding);
-            P.fillText(tate / r + "cm", p_size / 2, tate / 2 + s_padding);
+      P.fillStyle = 'green';
+      P.fill();
 
 
+      //頂点・辺の長さのテキスト
+      P.fillStyle = "#000";
+      P.font = "15px cursive";
+      P.fillText("A", s_padding, s_padding);
+      P.fillText("B", yoko + s_padding * 2, s_padding);
+      P.fillText("C", yoko + s_padding * 2, tate + s_padding * 2);
+      P.fillText("D", s_padding, tate + s_padding * 2);
+
+      P.fillText(yoko / r + "cm", yoko / 2 + s_padding, s_padding);
+      P.fillText(tate / r + "cm", p_size / 2, tate / 2 + s_padding);
+
+
+    }
+
+
+
+    //表示する
+    sh.onclick = function() {
+      tate = document.getElementsByName('tate')[0].value;
+      yoko = document.getElementsByName('yoko')[0].value;
+
+      if (yoko > canvasWidth || tate > canvasHeight) {
+        window.alert('長さは' + canvasWidth + '未満の整数で入力してください）');
+        document.getElementsByName('tate')[0].value = '';
+        document.getElementsByName('yoko')[0].value = '';
+        return;
+      }
+      if (yoko < 1.0 || tate < 1.0) {
+        window.alert('長さは1.0以上の整数で入力してください）');
+        document.getElementsByName('tate')[0].value = '';
+        document.getElementsByName('yoko')[0].value = '';
+        return;
+      }
+
+      // 文字列を数値に変換（10進数）
+      tate = parseInt(tate, 10);
+      yoko = parseInt(yoko, 10);
+
+      // 比率を求める
+      // 大きい方の辺の1cmが何pxに当たるかを計算
+      if (yoko > tate) {
+        r = Math.floor((canvasWidth - padding * 2) / yoko);
+      } else {
+        r = Math.floor((canvasWidth - padding * 2) / tate);
+      }
+
+      // cmをpxに変換
+      yoko *= r;
+      tate *= r;
+
+      // 点Pが動く四角を描画
+      draw(yoko, tate);
+
+      vel = document.getElementById('speed').value;
+      vel = parseFloat(vel, 10);
+
+    }
+
+
+    //スタート
+    sub.onclick = function() {
+      if (yoko === 0) {
+        return;
+      }
+
+      if (yoko === 0 || started) {
+        return;
+      }
+
+      started = true;
+
+      let extracted1 = function() {
+        P.clearRect(0, 0, canvasWidth, canvasHeight);
+        P.strokeRect(padding, padding, yoko + padding, tate + padding); //点Pが通るところ
+        draw();
+
+        if (dist % r == 0) {
+          lineChartData.labels.push(Math.floor(dist / r));
+          lineChartData.datasets[0].data.push(yoko * y / 2 / r / r);
         }
 
+        if (sp.value == 'A') {
+          if (dist < yoko) x += vel;
+          else if (dist < yoko + tate) y += vel;
+          else if (dist < yoko * 2 + tate) x -= vel;
+          else if (dist < yoko * 2 + tate * 2) y -= vel;
+          else clearInterval(animid);
+        } else if (sp.value == 'B') {
+          if (dist < tate) y += vel;
+          else if (dist < yoko + tate) x -= vel;
+          else if (dist < yoko + tate * 2) y -= vel;
+          else if (dist < yoko * 2 + tate * 2) x += vel;
+          else clearInterval(animid);
 
+        } else if (sp.value == 'C') {
+          if (dist < yoko) x -= vel;
+          else if (dist < yoko + tate) y -= vel;
+          else if (dist < yoko * 2 + tate) x += vel;
+          else if (dist < yoko * 2 + tate * 2) y += vel;
+          else clearInterval(animid);
 
-        //表示する
-        sh.onclick = function() {
-            tate = document.getElementsByName('tate')[0].value;
-            yoko = document.getElementsByName('yoko')[0].value;
-
-            if (yoko > canvasWidth || tate > canvasHeight) {
-                window.alert('長さは' + canvasWidth + '未満の整数で入力してください）');
-                document.getElementsByName('tate')[0].value = '';
-                document.getElementsByName('yoko')[0].value = '';
-                return;
-            }
-            if (yoko < 1.0 || tate < 1.0) {
-                window.alert('長さは1.0以上の整数で入力してください）');
-                document.getElementsByName('tate')[0].value = '';
-                document.getElementsByName('yoko')[0].value = '';
-                return;
-            }
-
-            // 文字列を数値に変換（10進数）
-            tate = parseInt(tate, 10);
-            yoko = parseInt(yoko, 10);
-
-            // 比率を求める
-            // 大きい方の辺の1cmが何pxに当たるかを計算
-            if (yoko > tate) {
-                r = Math.floor((canvasWidth - padding * 2) / yoko);
-            } else {
-                r = Math.floor((canvasWidth - padding * 2) / tate);
-            }
-
-            // cmをpxに変換
-            yoko *= r;
-            tate *= r;
-
-            // 点Pが動く四角を描画
-            draw(yoko, tate);
-
-            vel = document.getElementById('speed').value;
-            vel = parseFloat(vel, 10);
-
+        } else if (sp.value == 'D') {
+          if (dist < tate) y -= vel;
+          else if (dist < yoko + tate) x += vel;
+          else if (dist < yoko + tate * 2) y += vel;
+          else if (dist < yoko * 2 + tate * 2) x -= vel;
+          else clearInterval(animid);
         }
 
+        console.log("vel: " + vel);
+        console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate)
 
-        //スタート
-        sub.onclick = function() {
-            if (yoko === 0) {
-                return;
-            }
+        dist += vel;
 
-            if (yoko === 0 || started) {
-                return;
-            }
+        seconds = parseInt(dist / r / vel);
+        document.getElementById('seconds').textContent = seconds;
 
-            started = true;
+      }
 
-            let extracted1 = function() {
-                P.clearRect(0, 0, canvasWidth, canvasHeight);
-                P.strokeRect(padding, padding, yoko + padding, tate + padding); //点Pが通るところ
-                draw();
+      let anim = extracted1
+      animid = setInterval(anim, 10);
 
-                if (dist % r == 0) {
-                    lineChartData.labels.push(Math.floor(dist / r));
-                    lineChartData.datasets[0].data.push(yoko * y / 2 / r / r);
-                }
+    }
 
-                if (sp.value == 'A') {
-                    if (dist < yoko) x += vel;
-                    else if (dist < yoko + tate) y += vel;
-                    else if (dist < yoko * 2 + tate) x -= vel;
-                    else if (dist < yoko * 2 + tate * 2) y -= vel;
-                    else clearInterval(animid);
-                } else if (sp.value == 'B') {
-                    if (dist < tate) y += vel;
-                    else if (dist < yoko + tate) x -= vel;
-                    else if (dist < yoko + tate * 2) y -= vel;
-                    else if (dist < yoko * 2 + tate * 2) x += vel;
-                    else clearInterval(animid);
+    //ストップ
+    sto.onclick = function() {
+      clearInterval(animid);
+      started = false;
+    }
 
-                } else if (sp.value == 'C') {
-                    if (dist < yoko) x -= vel;
-                    else if (dist < yoko + tate) y -= vel;
-                    else if (dist < yoko * 2 + tate) x += vel;
-                    else if (dist < yoko * 2 + tate * 2) y += vel;
-                    else clearInterval(animid);
+    //はじめから
+    re.onclick = function() {
+      if (yoko === 0) {
+        return;
+      }
 
-                } else if (sp.value == 'D') {
-                    if (dist < tate) y -= vel;
-                    else if (dist < yoko + tate) x += vel;
-                    else if (dist < yoko + tate * 2) y += vel;
-                    else if (dist < yoko * 2 + tate * 2) x -= vel;
-                    else clearInterval(animid);
-                }
+      started = false;
 
-                console.log("vel: " + vel);
-                console.log("x=" + x + " y=" + y + " dist=" + dist + " yoko=" + yoko + " tate=" + tate)
+      x = 0;
+      y = 0;
+      dist = 0;
+      P.clearRect(0, 0, canvasWidth, canvasHeight);
+      P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
+      lineChartData.datasets[0].data = [];
+      lineChartData.labels = [];
+      draw();
 
-                dist += vel;
+    }
 
-                seconds = parseInt(dist / r / vel);
-                document.getElementById('seconds').textContent = seconds;
+    //グラフの内容
+    var lineChartData = {
+      labels: [],
+      datasets: [{
+        label: "緑データ",
+        fillColor: "rgba(92,220,92,0.2)", // 線から下端までを塗りつぶす色
+        strokeColor: "rgba(92,220,92,1)", // 折れ線の色
+        pointColor: "rgba(92,220,92,1)", // ドットの塗りつぶし色
+        pointStrokeColor: "white", // ドットの枠線色
+        pointHighlightFill: "red", // マウスが載った際のドットの塗りつぶし色
+        pointHighlightStroke: "green", // マウスが載った際のドットの枠線色
+        lineTension: 0,
+        data: [] // 各点の値
+      }]
+    }
 
-            }
+    //グラフを描画
+    gra.onclick = function() {
+      window.myLine = new Chart(ctx).Line(lineChartData);
+    }
 
-            let anim = extracted1
-            animid = setInterval(anim, 10);
-
-        }
-
-        //ストップ
-        sto.onclick = function() {
-            clearInterval(animid);
-            started = false;
-        }
-
-        //はじめから
-        re.onclick = function() {
-            if (yoko === 0) {
-                return;
-            }
-
-            started = false;
-
-            x = 0;
-            y = 0;
-            dist = 0;
-            P.clearRect(0, 0, canvasWidth, canvasHeight);
-            P.strokeRect(padding, padding, yoko, tate); //点Pが通るところ
-            lineChartData.datasets[0].data = [];
-            lineChartData.labels = [];
-            draw();
-
-        }
-
-        //リセット
-        cl.onclick = function() {
-            //document.size.reset();
-            P.clearRect(0, 0, canvasWidth, canvasHeight);
-        }
-
-        //グラフの内容
-        var lineChartData = {
-            labels: [],
-            datasets: [{
-                label: "緑データ",
-                fillColor: "rgba(92,220,92,0.2)", // 線から下端までを塗りつぶす色
-                strokeColor: "rgba(92,220,92,1)", // 折れ線の色
-                pointColor: "rgba(92,220,92,1)", // ドットの塗りつぶし色
-                pointStrokeColor: "white", // ドットの枠線色
-                pointHighlightFill: "red", // マウスが載った際のドットの塗りつぶし色
-                pointHighlightStroke: "green", // マウスが載った際のドットの枠線色
-                lineTension: 0,
-                data: [] // 各点の値
-            }]
-        }
-
-        //グラフを描画
-        gra.onclick = function() {
-            var ctx = document.getElementById('graph_canvas').getContext('2d');
-            window.myLine = new Chart(ctx).Line(lineChartData);
-        }
-    </script>
+    //リセット
+    cl.onclick = function() {
+      P.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    }
+  </script>
 </body></html>
