@@ -27,20 +27,18 @@ canvas {
 }
 
 input[type="text"] {
-    width: 30px;
     border: solid 3px gray;
     background-color: white;
     margin-top: 1rem;
-    font-size: 4vw;
+    font-size: 2.5rem;
+    width: 3rem;
+    height: 3rem;
 }
 
-input[type="text"] {
-    width: 2rem;
-    height: 1.5rem;
-}
 
 select {
-    height: 1.5rem;
+    height: 3rem;
+    font-size: 1.5rem;
 }
 
 .set {
